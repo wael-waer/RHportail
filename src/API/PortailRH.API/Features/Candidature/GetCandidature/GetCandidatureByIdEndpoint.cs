@@ -18,3 +18,4 @@ namespace PortailRH.API.Features.Candidatures.GetCandidatureById
         }
     }
 }
+

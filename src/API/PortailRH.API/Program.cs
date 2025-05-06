@@ -29,6 +29,8 @@ builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<ICongeRepository, CongeRepository>();
 builder.Services.AddScoped<ICandidatureRepository, CandidatureRepository>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+builder.Services.AddScoped<IJobRepository, JobRepository>();
+
 
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();

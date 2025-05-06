@@ -12,6 +12,7 @@ namespace PortailRH.API.Models.DataBase
         public DbSet<Conge> Conges { get; set; } = default!;
         public DbSet<Candidature> Candidatures { get; set; } = default!;
         public DbSet<Project> Projects { get; set; } = default!;
+        public DbSet<Job> Jobs { get; set; } = default!;
 
 
 

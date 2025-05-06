@@ -33,6 +33,7 @@
 	  <Folder Include="Features\Conge\GetConge\" />
 	  <Folder Include="Features\Conge\UpdateConge\" />
 	  <Folder Include="Features\Employees\DeleteEmployee\" />
+	  <Folder Include="Features\Job\CreateJob\" />
 	  <Folder Include="Features\Project\CreateProject\" />
 	  <Folder Include="Features\Project\GetProject\" />
 	  <Folder Include="Features\Project\DeleteProject\" />
