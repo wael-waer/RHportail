@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PortailRH.API.Models.DataBase;
 
@@ -11,9 +12,11 @@ using PortailRH.API.Models.DataBase;
 namespace PortailRH.API.Migrations
 {
     [DbContext(typeof(PortailRHContext))]
-    partial class PortailRHContextModelSnapshot : ModelSnapshot
+    [Migration("20250506095005_paymentpolicy")]
+    partial class paymentpolicy
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,9 +119,6 @@ namespace PortailRH.API.Migrations
                     b.Property<string>("Poste")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Salary")
-                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -229,47 +229,6 @@ namespace PortailRH.API.Migrations
                     b.ToTable("PaymentPolicies");
                 });
 
-            modelBuilder.Entity("PortailRH.API.Models.DataBase.Payslip", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("BasicSalary")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("GeneratedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("NetSalary")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("OtherDeductions")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("PaymentPolicyId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("SocialSecurityDeduction")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TaxDeduction")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("PaymentPolicyId");
-
-                    b.ToTable("Payslips");
-                });
-
             modelBuilder.Entity("PortailRH.API.Models.DataBase.Project", b =>
                 {
                     b.Property<int>("Id")
@@ -306,25 +265,6 @@ namespace PortailRH.API.Migrations
                     b.HasOne("PortailRH.API.Models.DataBase.Job", null)
                         .WithMany("Applicants")
                         .HasForeignKey("JobId");
-                });
-
-            modelBuilder.Entity("PortailRH.API.Models.DataBase.Payslip", b =>
-                {
-                    b.HasOne("PortailRH.API.Models.DataBase.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PortailRH.API.Models.DataBase.PaymentPolicy", "PaymentPolicy")
-                        .WithMany()
-                        .HasForeignKey("PaymentPolicyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("PaymentPolicy");
                 });
 
             modelBuilder.Entity("PortailRH.API.Models.DataBase.Job", b =>

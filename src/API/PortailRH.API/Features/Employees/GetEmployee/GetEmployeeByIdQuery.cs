@@ -2,7 +2,7 @@ namespace PortailRH.API.Features.Employees.GetEmployeeById
 {
     public record GetEmployeeByIdQuery(int Id) : IQuery<GetEmployeeByIdResult>;
 
-    public record GetEmployeeByIdResult(int Id, string LastName, string FirstName, string Email, DateTime BirthDate, string Poste);
+    public record GetEmployeeByIdResult(int Id, string LastName, string FirstName, string Email, DateTime BirthDate, string Poste , decimal Salary);
 
     public class GetEmployeeByIdQueryHandler(IEmployeeRepository employeeRepository)
         : IQueryHandler<GetEmployeeByIdQuery, GetEmployeeByIdResult>

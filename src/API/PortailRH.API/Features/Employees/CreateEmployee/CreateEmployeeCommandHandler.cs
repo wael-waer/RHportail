@@ -1,6 +1,6 @@
 ﻿namespace PortailRH.API.Features.Employees.CreateEmployee
 {
-    public record CreateEmployeeCommand(string LastName, string FirstName, string Email, DateTime BirthDate, string Poste)
+    public record CreateEmployeeCommand(string LastName, string FirstName, string Email, DateTime BirthDate, string Poste , decimal Salary) 
         : ICommand<CreateEmployeeResult>;
     public record CreateEmployeeResult(int Id);
 
@@ -12,7 +12,8 @@
             RuleFor(x => x.FirstName).NotEmpty().WithMessage("FirstName is required");
             RuleFor(x => x.Email).NotEmpty().WithMessage("Email is required");
             RuleFor(x => x.BirthDate).LessThan(DateTime.Now).WithMessage("BirthDate must be in the past");
-                
+            RuleFor(x => x.Salary).GreaterThan(0).WithMessage("Salary must be greater than 0.");
+
         }
     }
     public class CreateEmployeeCommandHandler(IEmployeeRepository employeeRepository)

@@ -10,5 +10,6 @@ namespace PortailRH.API.Models.DataBase
 
         public DateTime BirthDate { get; set; }
         public string Poste { get; set; } = default!;
+        public decimal Salary { get; set; }
     }
 }

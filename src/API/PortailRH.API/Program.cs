@@ -30,6 +30,9 @@ builder.Services.AddScoped<ICongeRepository, CongeRepository>();
 builder.Services.AddScoped<ICandidatureRepository, CandidatureRepository>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
+builder.Services.AddScoped<IPaymentPolicyRepository, PaymentPolicyRepository>();
+builder.Services.AddScoped<IPayslipRepository, PayslipRepository>();
+
 
 
 

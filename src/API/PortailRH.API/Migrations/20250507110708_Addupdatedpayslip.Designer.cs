@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PortailRH.API.Models.DataBase;
 
@@ -11,9 +12,11 @@ using PortailRH.API.Models.DataBase;
 namespace PortailRH.API.Migrations
 {
     [DbContext(typeof(PortailRHContext))]
-    partial class PortailRHContextModelSnapshot : ModelSnapshot
+    [Migration("20250507110708_Addupdatedpayslip")]
+    partial class Addupdatedpayslip
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

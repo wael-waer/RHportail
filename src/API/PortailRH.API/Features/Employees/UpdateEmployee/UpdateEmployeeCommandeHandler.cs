@@ -1,6 +1,6 @@
 ﻿namespace PortailRH.API.Features.Employees.UpdateEmployee
 {
-    public record UpdateEmployeeCommand(int Id, string LastName, string FirstName, string Email, DateTime BirthDate, string Poste)
+    public record UpdateEmployeeCommand(int Id, string LastName, string FirstName, string Email, DateTime BirthDate, string Poste, decimal Salary)
         : ICommand<UpdateEmployeeResult>;
 
     public record UpdateEmployeeResult(bool IsSuccess);

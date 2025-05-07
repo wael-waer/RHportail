@@ -1,5 +1,4 @@
 ﻿
-
 namespace PortailRH.API.Models.DataBase
 {
     public class PortailRHContext:DbContext
@@ -13,6 +12,8 @@ namespace PortailRH.API.Models.DataBase
         public DbSet<Candidature> Candidatures { get; set; } = default!;
         public DbSet<Project> Projects { get; set; } = default!;
         public DbSet<Job> Jobs { get; set; } = default!;
+        public DbSet<PaymentPolicy> PaymentPolicies { get; set; }
+        public DbSet<Payslip> Payslips { get; set; }
 
 
 

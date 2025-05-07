@@ -1,6 +1,6 @@
 ﻿namespace PortailRH.API.Features.Employees.CreateEmployee
 {
-    public record CreateEmployeeRequest(string LastName, string FirstName, string Email, DateTime BirthDate, string Poste);
+    public record CreateEmployeeRequest(string LastName, string FirstName, string Email, DateTime BirthDate, string Poste, decimal Salary);
     public record CreateEmployeeResponse(int Id);
 
     public class CreateEmployeeEndpoint() : ICarterModule
