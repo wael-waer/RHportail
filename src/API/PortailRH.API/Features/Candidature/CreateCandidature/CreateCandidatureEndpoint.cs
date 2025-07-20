@@ -1,6 +1,14 @@
 namespace PortailRH.API.Features.Candidatures.CreateCandidature
 {
-    public record CreateCandidatureRequest(string Nom, string Prenom, string Email, string PosteSouhaite);
+    public record CreateCandidatureRequest(
+    string Nom,
+    string Prenom,
+    string Email,
+    string PosteSouhaite,
+    string CVUrl
+    
+);
+
     public record CreateCandidatureResponse(int Id);
 
     public class CreateCandidatureEndpoint : ICarterModule
@@ -9,7 +17,14 @@ namespace PortailRH.API.Features.Candidatures.CreateCandidature
         {
             app.MapPost("/api/candidatures", async (CreateCandidatureRequest request, ISender sender) =>
             {
-                var command = request.Adapt<CreateCandidatureCommand>();
+                var command = new CreateCandidatureCommand(
+        request.Nom,
+        request.Prenom,
+        request.Email,
+        request.PosteSouhaite,
+        request.CVUrl
+        
+    );
                 var result = await sender.Send(command);
                 var response = result.Adapt<CreateCandidatureResponse>();
                 return Results.Created($"/api/candidatures/{response.Id}", response);

@@ -1,25 +1,18 @@
-
-namespace PortailRH.API.Features.Employees.GetEmployeeById
+namespace PortailRH.API.Features.Employees.GetAllEmployees
 {
-    public class GetEmployeeByIdEndpoint() : ICarterModule
+    public class GetAllEmployeesEndpoint() : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("/api/employees/{id:int}", async (int id, ISender sender) =>
+            app.MapGet("/api/employees", async (ISender sender) =>
             {
-                var query = new GetEmployeeByIdQuery(id);
-                var result = await sender.Send(query);
-
-                if (result == null)
-                    return Results.NotFound();
-
+                var result = await sender.Send(new GetAllEmployeesQuery());
                 return Results.Ok(result);
             })
-            .WithName("GetEmployeeById")
-            .Produces<GetEmployeeByIdResult>(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status404NotFound)
-            .WithSummary("Get Employee by Id")
-            .WithDescription("Retrieve an employee using their ID.");
+            .WithName("GetAllEmployees")
+            .Produces<List<GetAllEmployeesResult>>(StatusCodes.Status200OK)
+            .WithSummary("Get All Employees")
+            .WithDescription("Returns a list of all employees.");
         }
     }
 }

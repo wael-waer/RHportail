@@ -1,20 +1,19 @@
-namespace PortailRH.API.Features.Projects.GetProjectById
+namespace PortailRH.API.Features.Projects.GetAllProjects
 {
-    public class GetProjectByIdEndpoint : ICarterModule
+    public class GetAllProjectsEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("/api/projects/{id:int}", async (int id, ISender sender) =>
+            app.MapGet("/api/projects", async (ISender sender) =>
             {
-                var query = new GetProjectByIdQuery(id);
+                var query = new GetAllProjectsQuery();
                 var result = await sender.Send(query);
                 return Results.Ok(result);
             })
-            .WithName("GetProjectById")
-            .Produces<GetProjectByIdResult>(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status404NotFound)
-            .WithSummary("Get Project by Id")
-            .WithDescription("Retrieve a project by its unique identifier.");
+            .WithName("GetAllProjects")
+            .Produces<List<GetAllProjectsResult>>(StatusCodes.Status200OK)
+            .WithSummary("Get All Projects")
+            .WithDescription("Retrieve all available projects.");
         }
     }
 }

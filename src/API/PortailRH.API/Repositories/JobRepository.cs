@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace PortailRH.API.Repositories
 {
     public class JobRepository : RepositoryBase<Job>, IJobRepository
@@ -16,5 +18,7 @@ namespace PortailRH.API.Repositories
                 .Where(j => j.Id == id)
                 .ToListAsync();
         }
+        
     }
 }
+    

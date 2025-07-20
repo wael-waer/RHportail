@@ -1,24 +1,24 @@
-namespace PortailRH.API.Features.Jobs.GetJobById
+namespace PortailRH.API.Features.Jobs.GetAllJobs
 {
-    public class GetJobByIdEndpoint() : ICarterModule
+    public class GetAllJobsEndpoint() : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("/api/jobs/{id:int}", async (int id, ISender sender) =>
+            app.MapGet("/api/jobs", async (ISender sender) =>
             {
-                var query = new GetJobByIdQuery(id);
+                var query = new GetAllJobsQuery();
                 var result = await sender.Send(query);
 
-                if (result == null)
+                if (result == null || result.Count == 0)
                     return Results.NotFound();
 
                 return Results.Ok(result);
             })
-            .WithName("GetJobById")
-            .Produces<GetJobByIdResult>(StatusCodes.Status200OK)
+            .WithName("GetAllJobs")
+            .Produces<List<GetAllJobsResult>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status404NotFound)
-            .WithSummary("Get Job by Id")
-            .WithDescription("Retrieve a job using its ID.");
+            .WithSummary("Get All Jobs")
+            .WithDescription("Retrieve all available jobs.");
         }
     }
 }

@@ -1,19 +1,23 @@
-namespace PortailRH.API.Features.Projects.GetProjectById
+namespace PortailRH.API.Features.Projects.GetAllProjects
 {
-    public record GetProjectByIdQuery(int Id) : IQuery<GetProjectByIdResult>;
+    public record GetAllProjectsQuery() : IQuery<List<GetAllProjectsResult>>;
 
-    public record GetProjectByIdResult(int Id,string Type,string Title,string Priority,DateTime StartDate, DateTime EndDate);
-    public class GetProjectByIdQueryHandler(IProjectRepository projectRepository)
-       : IQueryHandler<GetProjectByIdQuery, GetProjectByIdResult>
+    public record GetAllProjectsResult(
+        int Id,
+        string Type,
+        string Title,
+        string Priority,
+        DateTime StartDate,
+        DateTime EndDate
+    );
+
+    public class GetAllProjectsQueryHandler(IProjectRepository projectRepository)
+        : IQueryHandler<GetAllProjectsQuery, List<GetAllProjectsResult>>
     {
-        public async Task<GetProjectByIdResult> Handle(GetProjectByIdQuery query, CancellationToken cancellationToken)
+        public async Task<List<GetAllProjectsResult>> Handle(GetAllProjectsQuery query, CancellationToken cancellationToken)
         {
-            var project = await projectRepository.GetByIdAsync(query.Id);
-            if (project is null)
-                throw new NotFoundException("project", query.Id);
-
-            return project.Adapt<GetProjectByIdResult>();
+            var projects = await projectRepository.GetAllAsync();
+            return projects.Adapt<List<GetAllProjectsResult>>();
         }
     }
-
 }

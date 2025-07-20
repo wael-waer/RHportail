@@ -1,23 +1,28 @@
 
 namespace PortailRH.API.Features.Conges.GetCongeById
-{
-    public record GetCongeByIdQuery(int Id) : IQuery<GetCongeByIdResult>;
+{   
+    public record GetAllCongesQuery() : IQuery<List<GetCongeByIdResult>>;
+    public record GetCongeByIdResult(int Id, string TypeConge, DateTime DateDebut, DateTime DateFin, string Statut, string Motif, int EmployeeId);
 
-    public record GetCongeByIdResult(int Id, string TypeConge, DateTime DateDebut, DateTime DateFin, string Statut, string Motif, int IdEmploye);
-
-    public class GetCongeByIdQueryHandler(ICongeRepository congeRepository)
-            : IQueryHandler<GetCongeByIdQuery, GetCongeByIdResult>
+    public class GetAllCongesQueryHandler(ICongeRepository congeRepository)
+        : IQueryHandler<GetAllCongesQuery, List<GetCongeByIdResult>>
     {
-        public async Task<GetCongeByIdResult> Handle(GetCongeByIdQuery query, CancellationToken cancellationToken)
+        public async Task<List<GetCongeByIdResult>> Handle(GetAllCongesQuery query, CancellationToken cancellationToken)
         {
-            var conge = await congeRepository.GetByIdAsync(query.Id);
-            if (conge is null)
-            {
-                throw new NotFoundException("conge", query.Id);
-            }
-            var congeToReturn = conge.Adapt<GetCongeByIdResult>();
-
-            return congeToReturn;
-        }
+            var congés = await congeRepository.GetAllAsync();
+            return congés.Select(c => new GetCongeByIdResult(
+                c.Id,
+                c.TypeConge,
+                c.DateDebut,
+                c.DateFin, 
+                c.Statut,
+                c.Motif,
+                c.EmployeeId
+               
+            )).ToList();
+        } 
     }
+    
+
+
 }

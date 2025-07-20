@@ -1,22 +1,23 @@
-namespace PortailRH.API.Features.Candidatures.GetCandidatureById
+namespace PortailRH.API.Features.Candidatures.GetAllCandidatures
 {
+    public record GetAllCandidaturesQuery() : IQuery<List<GetAllCandidaturesResult>>;
 
-    public record GetCandidatureByIdQuery(int Id) : IQuery<GetCandidatureByIdResult>;
+    public record GetAllCandidaturesResult(
+        int Id,
+        string Nom,
+        string Prenom,
+        string Email,
+        string PosteSouhaite,
+        string CVUrl
+    );
 
-    public record GetCandidatureByIdResult(int Id, string Nom, string Prenom, string Email, string PosteSouhaite);
-
-    public class GetCandidatureByIdQueryHandler(ICandidatureRepository repository)
-        : IQueryHandler<GetCandidatureByIdQuery, GetCandidatureByIdResult>
+    public class GetAllCandidaturesQueryHandler(ICandidatureRepository repository)
+        : IQueryHandler<GetAllCandidaturesQuery, List<GetAllCandidaturesResult>>
     {
-        public async Task<GetCandidatureByIdResult> Handle(GetCandidatureByIdQuery query, CancellationToken cancellationToken)
+        public async Task<List<GetAllCandidaturesResult>> Handle(GetAllCandidaturesQuery query, CancellationToken cancellationToken)
         {
-            var candidature = await repository.GetByIdAsync(query.Id);
-            if (candidature is null)
-            {
-                throw new NotFoundException("candidature", query.Id);
-            }
-
-            return candidature.Adapt<GetCandidatureByIdResult>();
+            var candidatures = await repository.GetAllAsync();
+            return candidatures.Adapt<List<GetAllCandidaturesResult>>();
         }
     }
 }

@@ -1,9 +1,9 @@
-
 namespace PortailRH.API.Features.Payslips.GeneratePayslips
 {
     public record GeneratePayslipsCommand(int PaymentPolicyId) : ICommand<GeneratePayslipsResult>;
 
     public record GeneratePayslipsResult(List<int> PayslipIds);
+
     public class GeneratePayslipsCommandHandler(
         IEmployeeRepository employeeRepo,
         IPaymentPolicyRepository policyRepo,
@@ -14,28 +14,44 @@ namespace PortailRH.API.Features.Payslips.GeneratePayslips
         {
             var policy = await policyRepo.GetByIdAsync(command.PaymentPolicyId);
             if (policy is null)
-                throw new ArgumentException("Policy not found");
+                throw new ArgumentException("Payment policy not found");
 
             var employees = await employeeRepo.GetAllAsync();
             var payslips = new List<Payslip>();
 
             foreach (var emp in employees)
             {
+               
+                var basicSalary = emp.Salaire;
+
+                var taxRate = policy.TaxRate / 100m;
+                var socialRate = policy.SocialSecurityRate / 100m;
+
+                var taxDeduction = basicSalary * taxRate;
+                var socialDeduction = basicSalary * socialRate;
+                var otherDeductions = policy.OtherDeductions; // fixed amount
+
+                var netSalary = basicSalary - taxDeduction - socialDeduction - otherDeductions;
+
                 var payslip = new Payslip
                 {
                     EmployeeId = emp.Id,
                     PaymentPolicyId = policy.Id,
-                    BasicSalary = 20000, // ou une valeur dynamique
-                    TaxDeduction = 20000 * policy.TaxRate,
-                    SocialSecurityDeduction = 20000 * policy.SocialSecurityRate,
-                    OtherDeductions = policy.OtherDeductions,
-                    NetSalary = 20000 - (20000 * policy.TaxRate) - (20000 * policy.SocialSecurityRate) - policy.OtherDeductions,
+                    BasicSalary = basicSalary,
+                    TaxDeduction = taxDeduction,
+                    SocialSecurityDeduction = socialDeduction,
+                    OtherDeductions = otherDeductions,
+                    NetSalary = netSalary,
+                    GeneratedAt = DateTime.UtcNow
                 };
+
                 payslips.Add(payslip);
             }
 
             foreach (var ps in payslips)
+            {
                 await payslipRepo.AddAsync(ps);
+            }
 
             return new GeneratePayslipsResult(payslips.Select(p => p.Id).ToList());
         }

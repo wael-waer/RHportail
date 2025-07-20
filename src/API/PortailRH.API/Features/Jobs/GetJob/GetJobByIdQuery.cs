@@ -1,23 +1,23 @@
-namespace PortailRH.API.Features.Jobs.GetJobById
+namespace PortailRH.API.Features.Jobs.GetAllJobs
 {
-    public record GetJobByIdQuery(int Id) : IQuery<GetJobByIdResult>;
+    public record GetAllJobsQuery() : IQuery<List<GetAllJobsResult>>;
 
-    public record GetJobByIdResult(int Id, string Title, string Description, string RequiredSkills, string Location,
+    public record GetAllJobsResult(int Id, string Title, string Description, string RequiredSkills, string Location,
         string ContractType, decimal Salary, DateTime ApplicationDeadline, DateTime PublicationDate, string Status);
 
-    public class GetJobByIdQueryHandler(IJobRepository jobRepository)
-        : IQueryHandler<GetJobByIdQuery, GetJobByIdResult>
+    public class GetAllJobsQueryHandler(IJobRepository jobRepository)
+        : IQueryHandler<GetAllJobsQuery, List<GetAllJobsResult>>
     {
-        public async Task<GetJobByIdResult> Handle(GetJobByIdQuery query, CancellationToken cancellationToken)
+        public async Task<List<GetAllJobsResult>> Handle(GetAllJobsQuery query, CancellationToken cancellationToken)
         {
-            var job = await jobRepository.GetByIdAsync(query.Id);
-            if (job is null)
+            var jobs = await jobRepository.GetAllAsync();
+            if (jobs is null || !jobs.Any())
             {
-                throw new NotFoundException("Job", query.Id);
+                throw new NotFoundException("Jobs");
             }
 
-            var jobToReturn = job.Adapt<GetJobByIdResult>();
-            return jobToReturn;
+            var jobsToReturn = jobs.Adapt<List<GetAllJobsResult>>();
+            return jobsToReturn;
         }
     }
 }

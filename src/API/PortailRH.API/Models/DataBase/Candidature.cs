@@ -9,7 +9,5 @@ namespace PortailRH.API.Models.DataBase
 
         public string CVUrl { get; set; } = default!;
         
-
     }
 }
-

@@ -11,7 +11,7 @@ namespace PortailRH.API.Repositories
 
         public async Task<IReadOnlyList<Conge>> GetCongesByEmployeeIdAsync(int employeeId)
         {
-            return await _dbContext.Conges.Where(c => c.IdEmploye == employeeId)
+            return await _dbContext.Conges.Where(c => c.EmployeeId == employeeId)
                 .ToListAsync();
 
         }

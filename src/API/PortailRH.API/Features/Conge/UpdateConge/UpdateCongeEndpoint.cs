@@ -1,6 +1,6 @@
 namespace PortailRH.API.Features.Conges.UpdateConge
 {
-    public record UpdateCongeRequest(int Id, string TypeConge, DateTime DateDebut, DateTime DateFin, string Statut, string Motif, int IdEmploye);
+    public record UpdateCongeRequest(int Id, string TypeConge, DateTime DateDebut, DateTime DateFin, string Statut, string Motif, int EmployeeId);
     public record UpdateCongeResponse(bool IsSuccess);
 
     public class UpdateCongeEndpoint : ICarterModule

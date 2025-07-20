@@ -1,21 +1,18 @@
-namespace PortailRH.API.Features.Candidatures.GetCandidatureById
+namespace PortailRH.API.Features.Candidatures.GetAllCandidatures
 {
-
-    public class GetCandidatureByIdEndpoint : ICarterModule
+    public class GetAllCandidaturesEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
-        {
-            app.MapGet("/api/candidatures/{id:int}", async (int id, ISender sender) =>
+        {   
+            app.MapGet("/api/candidatures", async (ISender sender) =>
             {
-                var result = await sender.Send(new GetCandidatureByIdQuery(id));
+                var result = await sender.Send(new GetAllCandidaturesQuery());
                 return Results.Ok(result);
             })
-            .WithName("GetCandidatureById")
-            .Produces<GetCandidatureByIdResult>(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status404NotFound)
-            .WithSummary("Get Candidature by Id")
-            .WithDescription("Retrieve a candidature using its ID.");
+            .WithName("GetAllCandidatures")
+            .Produces<List<GetAllCandidaturesResult>>(StatusCodes.Status200OK)
+            .WithSummary("Get All Candidatures")
+            .WithDescription("Retrieve the list of all job candidatures.");
         }
     }
 }
-

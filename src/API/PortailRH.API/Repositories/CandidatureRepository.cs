@@ -8,9 +8,6 @@ namespace PortailRH.API.Repositories
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
-        public async Task<IReadOnlyList<Candidature>> GetByIdAsync(int id)
-        {
-            return await _dbContext.Candidatures.Where(e => e.Id == id).ToListAsync();
-        }
+       
     }
 }

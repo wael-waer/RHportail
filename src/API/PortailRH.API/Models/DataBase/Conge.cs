@@ -8,7 +8,7 @@ namespace PortailRH.API.Models.DataBase
         public DateTime DateFin { get; set; }
         public string Statut { get; set; } = default!;
         public string Motif { get; set; } = default!;
-        public int IdEmploye { get; set; }
-
+        public int EmployeeId { get; set; }
+        public Employee Employee { get; set; } = default!;
     }
 }

@@ -1,22 +1,49 @@
-namespace PortailRH.API.Features.Employees.GetEmployeeById
+namespace PortailRH.API.Features.Employees.GetAllEmployees
 {
-    public record GetEmployeeByIdQuery(int Id) : IQuery<GetEmployeeByIdResult>;
+    public record GetAllEmployeesQuery : IQuery<List<GetAllEmployeesResult>>;
 
-    public record GetEmployeeByIdResult(int Id, string LastName, string FirstName, string Email, DateTime BirthDate, string Poste , decimal Salary);
+    public record GetAllEmployeesResult(
+        int Id,
+        string Nom,
+        string Prenom,
+        string Email,
+        DateTime DateNaissance,
+        string Fonction,
+        string Etablissement,
+        DateTime DateEntree,
+        string NumeroTelephone,
+        string? EmailSecondaire,
+        string? NumeroTelephoneSecondaire,
+        string NumeroIdentification,
+        int SoldeConge,
+        int SoldeCongeMaladie,
+        decimal Salaire
+    );
 
-    public class GetEmployeeByIdQueryHandler(IEmployeeRepository employeeRepository)
-        : IQueryHandler<GetEmployeeByIdQuery, GetEmployeeByIdResult>
+    public class GetAllEmployeesQueryHandler(IEmployeeRepository employeeRepository)
+        : IQueryHandler<GetAllEmployeesQuery, List<GetAllEmployeesResult>>
     {
-        public async Task<GetEmployeeByIdResult> Handle(GetEmployeeByIdQuery query, CancellationToken cancellationToken)
+        public async Task<List<GetAllEmployeesResult>> Handle(GetAllEmployeesQuery query, CancellationToken cancellationToken)
         {
-            var employee = await employeeRepository.GetByIdAsync(query.Id);
-            if (employee is null)
-            {
-                throw new NotFoundException("employee ", query.Id);
-            }
-            var employeToReturn= employee.Adapt<GetEmployeeByIdResult>();
+            var employees = await employeeRepository.GetAllAsync();
 
-            return employeToReturn;
+            return employees.Select(e => new GetAllEmployeesResult(
+                e.Id,
+                e.Nom,
+                e.Prenom,
+                e.Email,
+                e.DateNaissance,
+                e.Fonction,
+                e.Etablissement,
+                e.DateEntree,
+                e.NumeroTelephone,
+                e.EmailSecondaire,
+                e.NumeroTelephoneSecondaire,
+                e.NumeroIdentification,
+                e.SoldeConge,
+                e.SoldeCongeMaladie,
+                e.Salaire
+            )).ToList();
         }
     }
 }
