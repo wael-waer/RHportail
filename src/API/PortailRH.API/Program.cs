@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using PortailRH.API.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
@@ -35,6 +36,7 @@ builder.Services.AddMediatR(config =>
 
 builder.Services.AddValidatorsFromAssembly(assembly);
 builder.Services.AddCarter();
+builder.Services.AddSignalR();
 
 builder.Services.AddScoped(typeof(IAsyncRepository<>), typeof(RepositoryBase<>));
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
@@ -47,6 +49,10 @@ builder.Services.AddScoped<IPayslipRepository, PayslipRepository>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
 builder.Services.AddScoped<ISuiviCongeRepository, SuiviCongeRepository>();
+builder.Services.AddScoped<IContratRepository, ContratRepository>();
+builder.Services.AddSingleton<INotificationService, NotificationService>();
+
+
 
 
 builder.Services.AddAuthorization();
@@ -108,11 +114,30 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
             NameClaimType = ClaimTypes.Name
         };
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+
+                // Vérifie si la requête vient de SignalR et contient le token
+                var path = context.HttpContext.Request.Path;
+                if (!string.IsNullOrEmpty(accessToken) &&
+                    (path.StartsWithSegments("/notificationhub"))) // Adapté à ton hub
+                {
+                    context.Token = accessToken;
+                }
+
+                return Task.CompletedTask;
+            }
+        };
     });
 
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+app.MapHub<NotificationsHub>("/notificationhub");
+
 
 // Ajouter un admin par défaut si aucun admin n'existe en base
 using (var scope = app.Services.CreateScope())

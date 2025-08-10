@@ -5,7 +5,7 @@ namespace PortailRH.API.Features.Employees.LoginEmployee
     public record LoginEmployeeCommand(string NumeroIdentification, string MotDePasse)
         : IRequest<LoginEmployeeResult>;
 
-    public record LoginEmployeeResult(string Token, string Nom, string Prenom, string Email);
+    public record LoginEmployeeResult(string Token, string Nom, string Prenom, string Email , int Id);
 
     public class LoginEmployeeCommandValidator : AbstractValidator<LoginEmployeeCommand>
     {
@@ -49,7 +49,8 @@ namespace PortailRH.API.Features.Employees.LoginEmployee
                 Token: token,
                 Nom: employe.Nom,
                 Prenom: employe.Prenom,
-                Email: employe.Email
+                Email: employe.Email,
+                Id: employe.Id
             );
         }
 
@@ -58,9 +59,12 @@ namespace PortailRH.API.Features.Employees.LoginEmployee
             var claims = new[]
             {
             new Claim(JwtRegisteredClaimNames.Sub, employe.NumeroIdentification),
+            new Claim("EmployeeId", employe.Id.ToString()),
+
             new Claim("nom", employe.Nom),
             new Claim("prenom", employe.Prenom),
             new Claim(JwtRegisteredClaimNames.Email, employe.Email),
+            new Claim("id", employe.Id.ToString()),
             new Claim(ClaimTypes.Name, employe.Email),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };

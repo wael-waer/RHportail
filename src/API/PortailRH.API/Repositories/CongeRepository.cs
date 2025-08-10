@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace PortailRH.API.Repositories
 {
     public class CongeRepository : RepositoryBase<Conge>, ICongeRepository
@@ -15,5 +17,20 @@ namespace PortailRH.API.Repositories
                 .ToListAsync();
 
         }
+        public async Task<bool> ExistsCongeForEmployeeInYearAsync(int employeeId, int year)
+        {
+            return await _dbContext.Conges.AnyAsync(c =>
+                c.EmployeeId == employeeId &&
+                (c.DateDebut.Year == year || c.DateFin.Year == year));
+        }
+        public async Task<Conge?> GetByIdAsync(int id)
+        {
+            return await _dbContext.Conges.FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+
+
+
+
     }
 }

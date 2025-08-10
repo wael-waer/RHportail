@@ -6,7 +6,7 @@ namespace PortailRH.API.Features.Payslips.GetAllPayslips
         int EmployeeId,
         string FullName,
         string Email,
-        string Poste,
+        
         int Month,
         int Year,
         decimal BasicSalary,
@@ -34,7 +34,7 @@ namespace PortailRH.API.Features.Payslips.GetAllPayslips
                 p.EmployeeId,
                 $"{p.Employee.Prenom} {p.Employee.Nom}",
                 p.Employee.Email,
-                p.Employee.Fonction,
+               
                 p.GeneratedAt.Month,
                 p.GeneratedAt.Year,
                 p.BasicSalary,

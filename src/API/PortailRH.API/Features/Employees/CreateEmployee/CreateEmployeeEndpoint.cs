@@ -16,8 +16,9 @@ namespace PortailRH.API.Features.Employees.CreateEmployee
          string? NumeroTelephoneSecondaire,
          string NumeroIdentification,
          int SoldeConge,
-         int SoldeCongeMaladie,
+         string TypeContrat,
          decimal Salaire
+         
      );
 
     public record CreateEmployeeResponse(int Id);

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PortailRH.API.Models.DataBase;
 
@@ -11,9 +12,11 @@ using PortailRH.API.Models.DataBase;
 namespace PortailRH.API.Migrations
 {
     [DbContext(typeof(PortailRHContext))]
-    partial class PortailRHContextModelSnapshot : ModelSnapshot
+    [Migration("20250727150029_Addcontrat")]
+    partial class Addcontrat
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,6 +32,10 @@ namespace PortailRH.API.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -55,6 +62,10 @@ namespace PortailRH.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CVUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -95,6 +106,10 @@ namespace PortailRH.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -134,6 +149,10 @@ namespace PortailRH.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -157,15 +176,11 @@ namespace PortailRH.API.Migrations
                     b.Property<decimal>("Salaire")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("Typecontrat")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("Contrats");
+                    b.ToTable("contrats");
                 });
 
             modelBuilder.Entity("PortailRH.API.Models.DataBase.Employee", b =>
@@ -176,10 +191,11 @@ namespace PortailRH.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DateEntree")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DateNaissance")
@@ -190,14 +206,6 @@ namespace PortailRH.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmailSecondaire")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Etablissement")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Fonction")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MotDePasse")
@@ -223,15 +231,8 @@ namespace PortailRH.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Salaire")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("SoldeConge")
                         .HasColumnType("int");
-
-                    b.Property<string>("TypeContrat")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -250,6 +251,10 @@ namespace PortailRH.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ContractType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -300,6 +305,10 @@ namespace PortailRH.API.Migrations
 
                     b.Property<int>("Bereavement")
                         .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -359,6 +368,10 @@ namespace PortailRH.API.Migrations
                     b.Property<decimal>("BasicSalary")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -400,6 +413,10 @@ namespace PortailRH.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -439,6 +456,10 @@ namespace PortailRH.API.Migrations
 
                     b.Property<int>("Annee")
                         .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -480,7 +501,7 @@ namespace PortailRH.API.Migrations
             modelBuilder.Entity("PortailRH.API.Models.DataBase.Contrat", b =>
                 {
                     b.HasOne("PortailRH.API.Models.DataBase.Employee", "Employee")
-                        .WithMany()
+                        .WithMany("Contrats")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -521,6 +542,8 @@ namespace PortailRH.API.Migrations
             modelBuilder.Entity("PortailRH.API.Models.DataBase.Employee", b =>
                 {
                     b.Navigation("Conges");
+
+                    b.Navigation("Contrats");
 
                     b.Navigation("SuiviConges");
                 });

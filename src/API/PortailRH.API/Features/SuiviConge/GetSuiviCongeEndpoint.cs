@@ -1,3 +1,7 @@
+using PortailRH.API.Contracts;
+using PortailRH.API.Repositories;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+
 namespace PortailRH.API.Features.SuiviConges
 {
     public class SuiviCongeEndpoint : ICarterModule
@@ -25,6 +29,35 @@ namespace PortailRH.API.Features.SuiviConges
 
                 return Results.Ok(result);
             });
+            app.MapGet("/api/employees/{employeeId}/suiviconges/archives", async (
+     int employeeId,
+     ISuiviCongeRepository suiviCongeRepository,
+     ICongeRepository congeRepository) =>
+            {
+                var currentYear = DateTime.UtcNow.Year;
+
+                // Récupère tous les suivis
+                var allSuivis = await suiviCongeRepository.GetAllSuivisCongeByEmployeeIdAsync(employeeId);
+
+                // Filtrer uniquement les années archivées réellement présentes
+                var archivedSuivis = allSuivis
+                    .Where(s => !s.Actif)
+                    .Select(s => new
+                    {
+                        s.EmployeeId,
+                        s.Annee,
+                        s.SoldeInitial,
+                        s.SoldeRestant,
+                        s.Actif
+                    })
+                    .ToList();  
+
+                return Results.Ok(archivedSuivis);
+
+            });
+
+
+
         }
     }
 }

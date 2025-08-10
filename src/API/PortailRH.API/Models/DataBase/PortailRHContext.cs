@@ -16,6 +16,7 @@ namespace PortailRH.API.Models.DataBase
         public DbSet<Payslip> Payslips { get; set; }
         public DbSet<Admin> Admins { get; set; } = default!;
         public DbSet<SuiviConge> SuiviConges { get; set; } = default!;
+        public DbSet<Contrat> Contrats { get; set; } = default!;
 
 
 

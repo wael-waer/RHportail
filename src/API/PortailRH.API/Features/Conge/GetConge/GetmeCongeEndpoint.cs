@@ -1,36 +1,19 @@
+namespace PortailRH.API.Features.Conges.GetCongesByEmployeeId;
 
-
-
-namespace PortailRH.API.Features.Conges.GetMeConge
+public class GetCongesByEmployeeIdEndpoint : ICarterModule
 {
-    public class GetMeCongesEndpoint : ICarterModule
+    public void AddRoutes(IEndpointRouteBuilder app)
     {
-        public void AddRoutes(IEndpointRouteBuilder app)
+        app.MapGet("/api/employes/{employeeId:int}/conges", async (
+            int employeeId,
+            ICongeRepository repository) =>
         {
-            app.MapGet("/api/employes/me/conges", async (
-                HttpContext httpContext,
-                IEmployeeRepository employeeRepo,
-                ICongeRepository congeRepo
-            ) =>
-            {
-                var userEmail = httpContext.User.Identity?.Name;
+            var conges = await repository.GetCongesByEmployeeIdAsync(employeeId);
 
-                if (string.IsNullOrEmpty(userEmail))
-                    return Results.Unauthorized();
+            if (conges == null || !conges.Any())
+                return Results.NotFound($"Aucun congé trouvé pour l'employé avec l'ID {employeeId}.");
 
-                var employee = await employeeRepo.GetByEmailAsync(userEmail);
-                if (employee is null)
-                    return Results.NotFound("Employé non trouvé");
-
-                var conges = await congeRepo.GetCongesByEmployeeIdAsync(employee.Id);
-
-                return Results.Ok(conges);
-            })
-            .RequireAuthorization()
-            .WithName("GetMyConges")
-            .Produces<IReadOnlyList<Conge>>(StatusCodes.Status200OK)
-            .WithSummary("Récupérer les congés de l'utilisateur connecté")
-            .WithDescription("Retourne la liste des congés créés par l'employé connecté.");
-        }
+            return Results.Ok(conges);
+        });
     }
 }

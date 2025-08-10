@@ -38,6 +38,7 @@
 	  <Folder Include="Features\Candidature\UpdateCandidature\" />
 	  <Folder Include="Features\Conge\GetConge\" />
 	  <Folder Include="Features\Conge\GetCongeStatus\" />
+	  <Folder Include="Features\Contrat\CreateContrat\" />
 	  <Folder Include="Features\Employees\DeleteEmployee\" />
 	  <Folder Include="Features\LoginAdmin\CreateAdmin\" />
 	  <Folder Include="Features\SuiviConge\" />

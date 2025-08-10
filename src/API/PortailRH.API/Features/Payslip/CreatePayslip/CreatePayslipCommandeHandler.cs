@@ -22,26 +22,17 @@ namespace PortailRH.API.Features.Payslips.GeneratePayslips
             foreach (var emp in employees)
             {
                
-                var basicSalary = emp.Salaire;
+                
 
                 var taxRate = policy.TaxRate / 100m;
                 var socialRate = policy.SocialSecurityRate / 100m;
 
-                var taxDeduction = basicSalary * taxRate;
-                var socialDeduction = basicSalary * socialRate;
-                var otherDeductions = policy.OtherDeductions; // fixed amount
-
-                var netSalary = basicSalary - taxDeduction - socialDeduction - otherDeductions;
-
+               
                 var payslip = new Payslip
                 {
                     EmployeeId = emp.Id,
                     PaymentPolicyId = policy.Id,
-                    BasicSalary = basicSalary,
-                    TaxDeduction = taxDeduction,
-                    SocialSecurityDeduction = socialDeduction,
-                    OtherDeductions = otherDeductions,
-                    NetSalary = netSalary,
+                    
                     GeneratedAt = DateTime.UtcNow
                 };
 
