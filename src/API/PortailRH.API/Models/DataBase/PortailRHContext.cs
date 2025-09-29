@@ -1,4 +1,6 @@
 ﻿
+//using PortailRH.Domain.Entities;
+
 namespace PortailRH.API.Models.DataBase
 {
     public class PortailRHContext:DbContext
@@ -17,6 +19,8 @@ namespace PortailRH.API.Models.DataBase
         public DbSet<Admin> Admins { get; set; } = default!;
         public DbSet<SuiviConge> SuiviConges { get; set; } = default!;
         public DbSet<Contrat> Contrats { get; set; } = default!;
+        public DbSet<Equipe> Equipes { get; set; }
+       
 
 
 

@@ -58,13 +58,15 @@ namespace PortailRH.API.Features.Employees.LoginEmployee
         {
             var claims = new[]
             {
-            new Claim(JwtRegisteredClaimNames.Sub, employe.NumeroIdentification),
-            new Claim("EmployeeId", employe.Id.ToString()),
 
+            new Claim(ClaimTypes.NameIdentifier, employe.Id.ToString()),
+            //new Claim(JwtRegisteredClaimNames.Sub, employe.NumeroIdentification),
+            new Claim("EmployeeId", employe.Id.ToString()),
+            // new Claim(ClaimTypes.NameIdentifier, employe.Id.ToString()),
             new Claim("nom", employe.Nom),
             new Claim("prenom", employe.Prenom),
             new Claim(JwtRegisteredClaimNames.Email, employe.Email),
-            new Claim("id", employe.Id.ToString()),
+            // new Claim("id", employe.Id.ToString()),
             new Claim(ClaimTypes.Name, employe.Email),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };

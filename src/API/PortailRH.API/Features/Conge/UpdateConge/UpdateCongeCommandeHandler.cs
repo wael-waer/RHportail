@@ -1,3 +1,4 @@
+
 namespace PortailRH.API.Features.Conges.UpdateConge
 {
     public record UpdateCongeCommand(
@@ -30,16 +31,19 @@ namespace PortailRH.API.Features.Conges.UpdateConge
         private readonly ICongeRepository _congeRepository;
         private readonly IEmployeeRepository _employeeRepository;
         private readonly INotificationService _notificationService;
+        private readonly ILogger<UpdateCongeCommandHandler> _logger;
 
         public UpdateCongeCommandHandler(
             ICongeRepository congeRepository,
             IEmployeeRepository employeeRepository,
-            INotificationService notificationService
+            INotificationService notificationService,
+            ILogger<UpdateCongeCommandHandler> logger
         )
         {
             _congeRepository = congeRepository;
             _employeeRepository = employeeRepository;
             _notificationService = notificationService;
+            _logger = logger;
         }
 
         public async Task<UpdateCongeResult> Handle(UpdateCongeCommand command, CancellationToken cancellationToken)
@@ -61,19 +65,29 @@ namespace PortailRH.API.Features.Conges.UpdateConge
             {
                 var suiviConge = await _employeeRepository.GetSuiviCongeAsync(command.EmployeeId, anneeConge);
                 if (suiviConge == null || !suiviConge.Actif)
+                {
+                    await _notificationService.SendNotificationToUserAsync(
+                        command.EmployeeId.ToString(),
+                        "Votre congé a été refusé : aucun suivi de congé trouvé pour l'année en cours.",
+                        "error"
+                    );
                     throw new Exception("Aucun suivi de congé trouvé pour l'année en cours.");
+                }
 
                 if (suiviConge.SoldeRestant < (decimal)nouveauxJours)
                 {
+                    _logger.LogInformation("Sending notification to Employee {EmployeeId}", command.EmployeeId);
+
                     // Envoie notification temps réel solde insuffisant
                     await _notificationService.SendNotificationToUserAsync(
                         command.EmployeeId.ToString(),
-                        "Votre congé a été refusé : solde insuffisant."
+                        "Votre congé a été refusé : solde insuffisant.",
+                        "error"
                     );
 
                     throw new Exception("Solde de congé insuffisant.");
                 }
-                    
+
                 suiviConge.SoldeRestant -= (decimal)nouveauxJours;
                 await _employeeRepository.UpdateSuiviCongeAsync(suiviConge);
             }
@@ -82,7 +96,14 @@ namespace PortailRH.API.Features.Conges.UpdateConge
             {
                 var suiviConge = await _employeeRepository.GetSuiviCongeAsync(command.EmployeeId, anneeConge);
                 if (suiviConge == null)
+                {
+                    await _notificationService.SendNotificationToUserAsync(
+                        command.EmployeeId.ToString(),
+                        "Modification refusée : aucun suivi de congé trouvé.",
+                        "error"
+                    );
                     throw new Exception("Aucun suivi de congé trouvé pour l'année en cours.");
+                }
 
                 var difference = (decimal)(nouveauxJours - ancienJours);
 
@@ -90,7 +111,8 @@ namespace PortailRH.API.Features.Conges.UpdateConge
                 {
                     await _notificationService.SendNotificationToUserAsync(
                         command.EmployeeId.ToString(),
-                        "Modification refusée : solde de congé insuffisant pour la nouvelle durée."
+                        "Modification refusée : solde de congé insuffisant pour la nouvelle durée.",
+                        "error"
                     );
 
                     throw new Exception("Solde de congé insuffisant pour la nouvelle durée.");
@@ -110,14 +132,19 @@ namespace PortailRH.API.Features.Conges.UpdateConge
 
             await _congeRepository.UpdateAsync(conge);
 
-            // Notification succès (optionnel)
+            // Déterminer le type de notification en fonction du statut
+            string notificationType = "info";
+            if (command.Statut == "Approved") notificationType = "success";
+            if (command.Statut == "Declined") notificationType = "error";
+
+            // Notification succès
             await _notificationService.SendNotificationToUserAsync(
                 command.EmployeeId.ToString(),
-                $"Votre demande de congé (ID {command.Id}) a été mise à jour avec succès."
+                $"Votre demande de congé (ID {command.Id}) a été mise à jour. Nouveau statut: {command.Statut}",
+                notificationType
             );
 
             return new UpdateCongeResult(true);
         }
     }
-
 }

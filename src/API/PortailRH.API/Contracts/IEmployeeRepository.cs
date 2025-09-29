@@ -1,5 +1,5 @@
 ﻿
-using PortailRH.API.Models.DataBase;
+
 
 namespace PortailRH.API.Contracts
 {
@@ -13,7 +13,8 @@ namespace PortailRH.API.Contracts
         Task AddSuiviCongeAsync(SuiviConge suiviConge);
         Task<Employee> GetByEmailAsync(string email);
 
-
+        Task<bool> ExistsAsync(Guid id);
+        Task<Employee?> GetByIdAsync(Guid id);
 
 
     }

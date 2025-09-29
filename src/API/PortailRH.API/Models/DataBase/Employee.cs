@@ -49,6 +49,8 @@ namespace PortailRH.API.Models.DataBase
         public ICollection<Conge> Conges { get; set; } = new List<Conge>();
         public ICollection<SuiviConge> SuiviConges { get; set; } = new List<SuiviConge>();
 
+        public Guid? EquipeId { get; set; }
+        public Equipe? Equipe { get; set; }
 
     }
 }

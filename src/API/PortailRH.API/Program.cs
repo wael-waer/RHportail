@@ -1,13 +1,16 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
+using PortailRH.API.Features.Equipes.CreateEquipe;
 using PortailRH.API.SignalR;
+//using PortailRH.Domain.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngularDevClient", policy =>
+    options.AddPolicy("AllowAll", policy =>
     {
-        policy.WithOrigins("http://localhost:4200", "https://localhost:4200") 
+        policy.WithOrigins("http://localhost:4200", "https://localhost:4200" , "https://10.0.2.2:5001") 
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials(); // si tu utilises les cookies ou authentification
@@ -23,6 +26,8 @@ builder.Services.AddDbContext<PortailRHContext>(options =>
 });
 
 var assembly = typeof(Program).Assembly;
+//builder.Services.AddValidatorsFromAssembly(assembly, ServiceLifetime.Transient);
+//builder.Services.AddTransient<Carter.IValidatorLocator, Carter.DefaultValidatorLocator>();
 builder.Services.AddMediatR(config =>
 {
     config.RegisterServicesFromAssembly(assembly);
@@ -34,7 +39,13 @@ builder.Services.AddMediatR(config =>
     config.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
 
+
 builder.Services.AddValidatorsFromAssembly(assembly);
+
+
+
+
+
 builder.Services.AddCarter();
 builder.Services.AddSignalR();
 
@@ -51,6 +62,8 @@ builder.Services.AddScoped<IEmailRepository, EmailRepository>();
 builder.Services.AddScoped<ISuiviCongeRepository, SuiviCongeRepository>();
 builder.Services.AddScoped<IContratRepository, ContratRepository>();
 builder.Services.AddSingleton<INotificationService, NotificationService>();
+builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
+builder.Services.AddScoped<IEquipeRepository, EquipeRepository>();
 
 
 
@@ -136,7 +149,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
-app.MapHub<NotificationsHub>("/notificationhub");
+
 
 
 // Ajouter un admin par défaut si aucun admin n'existe en base
@@ -168,13 +181,14 @@ if (app.Environment.IsDevelopment())
 }
 
 
-app.UseCors("AllowAngularDevClient");
+app.UseCors("AllowAll");
 app.UseAuthentication(); 
 app.UseAuthorization();
 
 
-
+app.MapHub<NotificationsHub>("/notificationhub");
 app.MapCarter();
+
 
 
 app.Run();

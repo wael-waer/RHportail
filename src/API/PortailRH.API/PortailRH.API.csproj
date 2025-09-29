@@ -11,6 +11,7 @@
 		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
 		<PackageReference Include="Carter" Version="8.2.1" />
 		<PackageReference Include="MailKit" Version="4.13.0" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
 		  <PrivateAssets>all</PrivateAssets>
@@ -29,6 +30,7 @@
 
 	<ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks\BuildingBlocks.csproj" />
+	
   </ItemGroup>
 
 	<ItemGroup>
@@ -40,7 +42,12 @@
 	  <Folder Include="Features\Conge\GetCongeStatus\" />
 	  <Folder Include="Features\Contrat\CreateContrat\" />
 	  <Folder Include="Features\Employees\DeleteEmployee\" />
+	  <Folder Include="Features\Equipe\CreateEquipe\" />
+	  <Folder Include="Features\Equipe\GetEquipe\" />
+	  <Folder Include="Features\Equipe\DeleteEquipe\" />
+	  <Folder Include="Features\Equipe\UpdateEquipe\" />
 	  <Folder Include="Features\LoginAdmin\CreateAdmin\" />
+	  <Folder Include="Features\Notification\" />
 	  <Folder Include="Features\SuiviConge\" />
 	  <Folder Include="Features\PaymentPolicy\CreatePaymentPolicy\" />
 	  <Folder Include="Features\PaymentPolicy\GetPaymentPolicy\" />
