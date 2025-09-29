@@ -23,7 +23,7 @@ jobs:
 
       - name: Restore dependencies
         
-        run: dotnet restore PortailRH.sln
+        run: dotnet restore src/PortailRH.sln 
 
   build:
     runs-on: [self-hosted, Windows, X64]
