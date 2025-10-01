@@ -97,3 +97,21 @@ jobs:
         with:
           name: dotnet-publish
           path: ./publish
+
+  deploy:
+      runs-on: [self-hosted, Windows, X64]
+      needs: publish
+      steps:
+        - name: Download published artifact
+          uses: actions/download-artifact@v4
+          with:
+
+           name: dotnet-publish
+           path: ./publish
+
+        - name: Deploy to local folder
+          run: |
+            $target = "D:\Apps\PortailRH"   # <-- mets ton chemin réel ici
+            if (Test-Path $target) { Remove-Item "$target\*" -Recurse -Force }
+            Copy-Item -Path "./publish/*" -Destination $target -Recurse
+            Write-Host "✅ Application déployée dans $target"
