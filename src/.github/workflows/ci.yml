@@ -69,6 +69,7 @@ jobs:
       - name: Publish
         run: dotnet publish -c Release -o ./publish
 
+
       - name: Upload publish artifact
         uses: actions/upload-artifact@v3
         with:
