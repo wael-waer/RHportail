@@ -23,7 +23,7 @@ jobs:
 
       - name: Restore dependencies
         
-        run: dotnet restore PortailRH.sln
+        run: dotnet restore src/PortailRH.sln 
 
   build:
     runs-on: [self-hosted, Windows, X64]
@@ -65,11 +65,10 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '9.0.x'
-   
-
+          dotnet-version: '9.0.x' 
       - name: Publish
         run: dotnet publish -c Release -o ./publish
+
 
       - name: Upload publish artifact
         uses: actions/upload-artifact@v3
