@@ -99,19 +99,48 @@ jobs:
           path: ./publish
 
   deploy:
-      runs-on: [self-hosted, Windows, X64]
-      needs: publish
-      steps:
-        - name: Download published artifact
-          uses: actions/download-artifact@v4
-          with:
 
-           name: dotnet-publish
-           path: ./publish
+   runs-on: [self-hosted, Windows, X64]
+   needs: publish
+   steps:
+    - name: Download published artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: dotnet-publish
+        path: ./publish
 
-        - name: Deploy to local folder
-          run: |
-            $target = "D:\Apps\PortailRH"   # <-- mets ton chemin réel ici
-            if (Test-Path $target) { Remove-Item "$target\*" -Recurse -Force }
-            Copy-Item -Path "./publish/*" -Destination $target -Recurse
-            Write-Host "✅ Application déployée dans $target"
+    - name: Deploy to local folder (PowerShell)
+      shell: pwsh
+      run: |
+        $publishPath = Join-Path $PWD.Path 'publish'
+        $target = 'C:\Apps\PortailRH'   
+
+        Write-Host "Publish folder: $publishPath"
+        Write-Host "Target folder:  $target"
+
+        if (-not (Test-Path $publishPath)) {
+          throw "Le dossier de publication est introuvable : $publishPath"
+        }
+
+        # Si le target existe et c'est un fichier, le supprimer
+        if (Test-Path $target) {
+          $item = Get-Item -LiteralPath $target
+          if (-not $item.PSIsContainer) {
+            Write-Host "La cible existe et c'est un fichier. Suppression du fichier..."
+            Remove-Item -LiteralPath $target -Force
+            New-Item -ItemType Directory -Path $target | Out-Null
+          }
+        } else {
+          # créer le dossier cible s'il n'existe pas
+          New-Item -ItemType Directory -Path $target | Out-Null
+        }
+
+        # Vider le dossier cible (sans supprimer le dossier lui-même)
+        Get-ChildItem -LiteralPath $target -Force | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+
+        # Copier tout le contenu du dossier publish vers la target
+        Copy-Item -Path (Join-Path $publishPath '*') -Destination $target -Recurse -Force
+
+        Write-Host "✅ Application déployée dans $target"
+
+           
