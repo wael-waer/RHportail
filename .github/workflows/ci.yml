@@ -4,12 +4,74 @@ on:
   push:
     branches:
       - devops
+  pull_request:
+    branches:
+      - devops
   workflow_dispatch:  
 
 jobs:
-  build-and-test:
+  restore:
     runs-on: [self-hosted, Windows, X64]
-    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore src/PortailRH.sln
+
+  build:
+    runs-on: [self-hosted, Windows, X64]
+    needs: restore
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore dependencies (again for this job)
+        run: dotnet restore src/PortailRH.sln
+
+      - name: Build
+        run: dotnet build src/PortailRH.sln --configuration Release --no-restore
+
+  test:
+    runs-on: [self-hosted, Windows, X64]
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore dependencies (again for this job)
+        run: dotnet restore src/PortailRH.sln
+
+      - name: Build (again for this job)
+        run: dotnet build src/PortailRH.sln --configuration Release --no-restore
+
+      - name: Run Tests
+        run: dotnet test src/PortailRH.sln --no-build --verbosity normal
+
+  publish:
+    runs-on: [self-hosted, Windows, X64]
+    needs: test
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,11 +89,8 @@ jobs:
       - name: Build
         run: dotnet build src/PortailRH.sln --configuration Release --no-restore
 
-      - name: Test
-        run: dotnet test src/PortailRH.sln --configuration Release --no-build --verbosity normal
-
       - name: Publish
-        run: dotnet publish src/PortailRH.sln -c Release -o ./publish --no-build
+        run: dotnet publish src/PortailRH.sln -c Release -o ./publish
 
       - name: Upload publish artifact
         uses: actions/upload-artifact@v4
