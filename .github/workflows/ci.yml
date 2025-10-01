@@ -110,7 +110,7 @@ jobs:
         path: ./publish
 
     - name: Deploy to local folder (PowerShell)
-      shell: pwsh
+      shell: powershell
       run: |
         $publishPath = Join-Path $PWD.Path 'publish'
         $target = 'C:\Apps\PortailRH'   
@@ -122,7 +122,6 @@ jobs:
           throw "Le dossier de publication est introuvable : $publishPath"
         }
 
-        # Si le target existe et c'est un fichier, le supprimer
         if (Test-Path $target) {
           $item = Get-Item -LiteralPath $target
           if (-not $item.PSIsContainer) {
@@ -131,14 +130,10 @@ jobs:
             New-Item -ItemType Directory -Path $target | Out-Null
           }
         } else {
-          # créer le dossier cible s'il n'existe pas
           New-Item -ItemType Directory -Path $target | Out-Null
         }
 
-        # Vider le dossier cible (sans supprimer le dossier lui-même)
         Get-ChildItem -LiteralPath $target -Force | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
-
-        # Copier tout le contenu du dossier publish vers la target
         Copy-Item -Path (Join-Path $publishPath '*') -Destination $target -Recurse -Force
 
         Write-Host "✅ Application déployée dans $target"
